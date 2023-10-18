@@ -1,8 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { User } from '../users/users.schema';
-import { CategoryProduct } from '../categoryProduct/categoryProduct.schema';
+import { Inventory } from 'src/inventory/inventory.schema';
+import { CategoryProduct } from 'src/categoryProduct/categoryProduct.schema';
+import { User } from 'src/users/users.schema';
 
 export type UserDocument = Product & Document;
 
@@ -37,17 +38,18 @@ export class Product {
   price: number;
 
   @Prop({
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Inventory',
     required: true,
   })
-  quantity: number;
+  quantity: Inventory;
 
   @Prop({
     required: true,
     type: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        ratinNumber: { type: Number },
+        ratingNumber: { type: Number },
       },
     ],
     default: [],

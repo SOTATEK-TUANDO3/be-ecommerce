@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { User } from '../users/users.schema';
+import { User } from 'src/users/users.schema';
 
 export type UserDocument = Payment & Document;
 
@@ -12,7 +12,7 @@ export class Payment {
     ref: 'User',
     required: true,
   })
-  userId: User;
+  user: User;
 
   @Prop({
     type: Number,
