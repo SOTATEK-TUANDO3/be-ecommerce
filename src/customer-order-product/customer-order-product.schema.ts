@@ -1,9 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Product } from '../products/product.schema';
-import { Order } from '../orders/order.schema';
-
+import { Order } from 'src/orders/order.schema';
+import { Product } from 'src/products/product.schema';
 export type UserDocument = CategoryProduct & Document;
 
 @Schema()
@@ -13,14 +12,14 @@ export class CategoryProduct {
     ref: 'Order',
     required: true,
   })
-  orderId: Order;
+  order: Order;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
     required: true,
   })
-  productId: Product;
+  product: Product;
 
   @Prop({
     required: true,

@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Payment } from '../payment/payment.schema';
-import { User } from '../users/users.schema';
+import { Payment } from 'src/payment/payment.schema';
+import { User } from 'src/users/users.schema';
 
 export type UserDocument = Order & Document;
 
@@ -13,14 +13,14 @@ export class Order {
     ref: 'User',
     required: true,
   })
-  userId: User;
+  user: User;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Payment',
     required: true,
   })
-  paymentId: Payment;
+  payment: Payment;
 
   @Prop({
     type: String,
