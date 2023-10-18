@@ -12,11 +12,14 @@ import { InventoryModule } from './inventory/inventory.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost:27017/assignment'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017', {
+      dbName: 'assignment',
+    }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
@@ -29,13 +32,17 @@ import { MailerModule } from '@nestjs-modules/mailer';
           },
         },
         defaults: {
-          from: `No Reply <${config.get('MAIL_FROM')}>`,
+          from: `"No Reply" <${config.get('MAIL_FROM')}>`,
         },
         template: {
           dir: join(__dirname, 'src/templates/email'),
-          // adapter: handlebars.template,
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
         },
       }),
+      inject: [ConfigService],
     }),
     UsersModule,
     OrdersModule,
