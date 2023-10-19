@@ -9,40 +9,25 @@ import { WishproductModule } from './wishproduct/wishproduct.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CustomerOrderProductModule } from './customer-order-product/customer-order-product.module';
 import { InventoryModule } from './inventory/inventory.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { join } from 'path';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot('mongodb://127.0.0.1:27017', {
       dbName: 'assignment',
     }),
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        transport: {
-          host: config.get('MAIL_HOST'),
-          secure: false,
-          auth: {
-            user: config.get('MAIL_USER'),
-            pass: config.get('MAIL_PASSWORD'),
-          },
-        },
-        defaults: {
-          from: `"No Reply" <${config.get('MAIL_FROM')}>`,
-        },
-        template: {
-          dir: join(__dirname, 'src/templates/email'),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
-        },
-      }),
-      inject: [ConfigService],
+    JwtModule.register({
+      global: true,
+      secret: 'verifyemail',
+      signOptions: {
+        expiresIn: '6000s',
+      },
     }),
     UsersModule,
     OrdersModule,
@@ -53,6 +38,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     WishproductModule,
     CustomerOrderProductModule,
     InventoryModule,
+    AuthModule,
+    MailModule,
   ],
 })
 export class AppModule {}
