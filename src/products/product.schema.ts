@@ -5,7 +5,7 @@ import { Inventory } from 'src/inventory/inventory.schema';
 import { CategoryProduct } from 'src/categoryProduct/categoryProduct.schema';
 import { User } from 'src/users/users.schema';
 
-export type UserDocument = Product & Document;
+export type ProductDocument = Product & Document;
 
 @Schema()
 export class Product {

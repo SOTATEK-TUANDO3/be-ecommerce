@@ -1,6 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -10,16 +9,13 @@ export class MailService {
   constructor(
     private mailerService: MailerService,
     private jwtService: JwtService,
-    private configService: ConfigService,
     private userService: UsersService,
   ) {}
 
   async sendEmailConfirmation(user: CreateUserDto) {
-    console.log(this.configService.get('JWT_VERIFICATION_EMAIL_TOKEN_SECRET'));
     const payload = { email: user.email };
     const token = this.jwtService.sign(payload);
     const url = `http://localhost:3000/mail/verify/${token}`;
-    console.log(token);
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Verify Email',
@@ -40,6 +36,7 @@ export class MailService {
         }
 
         await this.userService.markEmailAsConfirmed(user.email);
+        return;
       }
       throw new BadRequestException();
     } catch (error) {
