@@ -1,11 +1,11 @@
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-interface IRatting {
+export interface IRatting {
   user: number;
   rattingNumber: number;
 }
 
-interface IComment {
+export interface IComment {
   user: number;
   comment: string;
 }
@@ -17,7 +17,7 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   @IsString()
-  desciption: string;
+  description: string;
 
   @IsNotEmpty()
   @IsString()
@@ -35,16 +35,9 @@ export class CreateProductDto {
   @IsNumber()
   quantity: number;
 
-  @IsNotEmpty()
   @IsArray()
   ratting: IRatting[];
 
-  @IsNotEmpty()
   @IsArray()
   comments: IComment[];
-}
-
-export class UpdateProductDto extends CreateProductDto {
-  @IsNotEmpty()
-  _id: number;
 }

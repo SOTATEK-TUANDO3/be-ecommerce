@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 import { Payment } from 'src/payment/payment.schema';
 import { User } from 'src/users/users.schema';
 
-export type UserDocument = Order & Document;
+export type OrderDocument = Order & Document;
 
 @Schema()
 export class Order {

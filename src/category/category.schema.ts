@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type UserDocument = Category & Document;
+export type CategoryDocument = Category & Document;
 
 @Schema()
 export class Category {
   @Prop({
     type: String,
+    unique: true,
     required: true,
   })
   name: string;

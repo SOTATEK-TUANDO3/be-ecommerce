@@ -3,7 +3,7 @@ import mongoose, { Document } from 'mongoose';
 import { Product } from 'src/products/product.schema';
 import { User } from 'src/users/users.schema';
 
-export type UserDocument = WishProduct & Document;
+export type WishProductDocument = WishProduct & Document;
 
 @Schema()
 export class WishProduct {
