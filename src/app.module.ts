@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';
-import { CategoryProductModule } from './categoryProduct/categoryProduct.module';
 import { CategoryModule } from './category/category.module';
 import { ProductsModule } from './products/products.module';
 import { PaymentModule } from './payment/payment.module';
@@ -13,26 +12,27 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from './mail/mail.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017', {
-      dbName: 'assignment',
+    MongooseModule.forRoot(process.env.CONNECT_URL, {
+      dbName: process.env.DB_NAME,
     }),
     JwtModule.register({
       global: true,
-      secret: 'verifyemail',
+      secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: '6000s',
+        expiresIn: process.env.JWT_TIMEOUT,
       },
     }),
     UsersModule,
     OrdersModule,
     CategoryModule,
-    CategoryProductModule,
     ProductsModule,
     PaymentModule,
     WishproductModule,
@@ -40,6 +40,12 @@ import { MailModule } from './mail/mail.module';
     InventoryModule,
     AuthModule,
     MailModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

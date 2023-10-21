@@ -26,9 +26,8 @@ export class MailService {
   async verifyEmail(token: string) {
     try {
       const payload = this.jwtService.verify(token, {
-        secret: 'verifyemail',
+        secret: process.env.JWT_SECRET,
       });
-
       if (typeof payload === 'object' && 'email' in payload) {
         const user = await this.userService.getByEmail(payload.email);
         if (user.isVerified) {

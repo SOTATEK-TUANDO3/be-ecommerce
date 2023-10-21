@@ -43,10 +43,9 @@ export class UsersService {
 
   async validateLogin(login: Login) {
     const user = await this.userModel.findOne({ email: login.username });
-    if (user && (await bcrypt.compare(login.password, user.password))) {
-      return {
-        username: user.email,
-      };
+    const { password, ...result } = user;
+    if (user && (await bcrypt.compare(login.password, password))) {
+      return result;
     }
   }
 }

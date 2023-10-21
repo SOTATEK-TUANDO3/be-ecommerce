@@ -12,7 +12,16 @@ import { InventoryService } from 'src/inventory/inventory.service';
 import { CategoryService } from 'src/category/category.service';
 import { Category } from 'src/category/category.schema';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FilterProductsDto } from './dto/filter-product.dto';
+import { GetProductsDto } from './dto/filter-product.dto';
+import { UsersService } from 'src/users/users.service';
+import { CommentDto } from './dto/comment-product.dto';
+import { RatingDto } from './dto/rating-product.dto';
+
+export interface IGetResponseProducts {
+  total_page: number;
+  currentPage: number;
+  products: Product[];
+}
 
 @Injectable()
 export class ProductsService {
@@ -20,6 +29,7 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     private inventoryService: InventoryService,
     private categoryService: CategoryService,
+    private usersService: UsersService,
   ) {}
 
   async createProduct(
@@ -73,8 +83,8 @@ export class ProductsService {
     }
   }
 
-  async getProducts(filterDto: FilterProductsDto): Promise<Product[]> {
-    const { category, name, search } = filterDto;
+  async getProducts(filterDto: GetProductsDto): Promise<IGetResponseProducts> {
+    const { category, name, search, limit = 10, skip = 0 } = filterDto;
     const mappedFilterDto: {
       name?: RegExp;
       category?: RegExp;
@@ -89,11 +99,42 @@ export class ProductsService {
     if (search) {
       mappedFilterDto.search = new RegExp(search, 'i');
     }
-    const products = await this.productModel.find(mappedFilterDto);
-    return products;
+    const count = await this.productModel.countDocuments({});
+    const total_page = Math.floor(count / limit) + 1;
+    const products = await this.productModel
+      .find(mappedFilterDto)
+      .limit(limit)
+      .skip(skip);
+    return {
+      total_page,
+      currentPage: skip,
+      products,
+    };
   }
 
   async getById(id: string): Promise<Product> {
     return await this.productModel.findById(id);
+  }
+
+  async comment(commentDto: CommentDto): Promise<void> {
+    const { id, email, comment } = commentDto;
+    const user = await this.usersService.getByEmail(email);
+    const product = await this.productModel.findById(id);
+    product.comments.push({
+      user,
+      comment,
+    });
+    product.save();
+  }
+
+  async rating(ratingDto: RatingDto): Promise<void> {
+    const { id, email, ratingNumber } = ratingDto;
+    const user = await this.usersService.getByEmail(email);
+    const product = await this.productModel.findById(id);
+    product.rating.push({
+      user,
+      ratingNumber,
+    });
+    product.save();
   }
 }

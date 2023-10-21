@@ -13,15 +13,15 @@ import { UsersModule } from 'src/users/users.module';
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
-          host: 'smtp.gmail.com',
+          host: config.get<string>('MAIL_HOST'),
           secure: false,
           auth: {
-            user: 'Tuan.do3@sotatek.com',
-            pass: 'ukavrkcwigvolkjn',
+            user: config.get<string>('MAIL_USER'),
+            pass: config.get<string>('MAIL_PASSWORD'),
           },
         },
         defaults: {
-          from: `"No Reply" <doanhtuan7198@gmail.com>`,
+          from: `"No Reply" <${config.get<string>('MAIL_FROM')}>`,
         },
         template: {
           dir: join(__dirname, 'src/templates/email'),

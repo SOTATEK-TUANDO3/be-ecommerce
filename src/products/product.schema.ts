@@ -49,7 +49,7 @@ export class Product {
     type: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        ratingNumber: { type: Number },
+        ratingNumber: { type: Number, max: 5, min: 1 },
       },
     ],
     default: [],
@@ -58,7 +58,7 @@ export class Product {
     {
       user: User;
       ratingNumber: number;
-    }[],
+    },
   ];
 
   @Prop({
@@ -75,7 +75,7 @@ export class Product {
     {
       user: User;
       comment: string;
-    }[],
+    },
   ];
 }
 
