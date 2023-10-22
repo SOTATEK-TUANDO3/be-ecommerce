@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { Category } from 'src/category/category.schema';
 import { Order } from 'src/orders/order.schema';
 import { Product } from 'src/products/product.schema';
 
-export type CustomerOrderProductDocument = CategoryProduct & Document;
+export type CustomerOrderProductDocument = CustomerOrderProduct & Document;
 
 @Schema()
-export class CategoryProduct {
+export class CustomerOrderProduct {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
@@ -38,11 +39,11 @@ export class CategoryProduct {
   image: string;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
     required: true,
-    default: [],
   })
-  category: CategoryProduct[];
+  category: Category;
 
   @Prop({
     type: Number,
@@ -57,5 +58,5 @@ export class CategoryProduct {
   quantity: number;
 }
 
-export const CategoryProductSchema =
-  SchemaFactory.createForClass(CategoryProduct);
+export const CustomerOrderProductSchema =
+  SchemaFactory.createForClass(CustomerOrderProduct);

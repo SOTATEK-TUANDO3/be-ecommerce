@@ -45,4 +45,15 @@ export class MailService {
       throw new BadRequestException('Bad confirmation token');
     }
   }
+
+  async sendEmailConfirmationOrder() {
+    // const payload = { email: user.email };
+    // const token = this.jwtService.sign(payload);
+    // const url = `http://localhost:3000/mail/verify/${token}`;
+    await this.mailerService.sendMail({
+      to: 'meoghetca98@gmail.com',
+      subject: 'Confirmation Order',
+      html: `Hey Bean <br><br> this is email for confirmation your order`,
+    });
+  }
 }

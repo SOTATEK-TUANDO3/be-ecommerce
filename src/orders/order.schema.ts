@@ -5,6 +5,11 @@ import { Payment } from 'src/payment/payment.schema';
 import { User } from 'src/users/users.schema';
 
 export type OrderDocument = Order & Document;
+export enum OrderStatus {
+  PROCESSING = 'processing',
+  SHIPPED = 'shipped',
+  DELIVERED = 'delivered',
+}
 
 @Schema()
 export class Order {
@@ -53,8 +58,8 @@ export class Order {
   country: string;
 
   @Prop({
-    type: String,
     required: true,
+    enum: [OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.DELIVERED],
   })
   status: string;
 }

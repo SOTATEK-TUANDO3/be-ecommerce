@@ -21,22 +21,22 @@ export class Payment {
   amount: number;
 
   @Prop({
-    type: String,
+    type: Boolean,
     required: true,
   })
-  status: string;
+  status: boolean;
 
-  @Prop({
-    type: String,
-    required: true,
-  })
-  type: string;
+  // @Prop({
+  //   type: String,
+  //   required: true,
+  // })
+  // type: string;
 
-  @Prop({
-    type: String,
-    required: true,
-  })
-  gateWay: string;
+  // @Prop({
+  //   type: String,
+  //   required: true,
+  // })
+  // gateWay: string;
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);
