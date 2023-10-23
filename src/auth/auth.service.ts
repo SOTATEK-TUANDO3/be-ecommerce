@@ -5,7 +5,6 @@ import { User } from 'src/users/users.schema';
 import { UsersService } from 'src/users/users.service';
 import { Login } from './dto/login-dto';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +12,6 @@ export class AuthService {
     private mailService: MailService,
     private usersService: UsersService,
     private jwtService: JwtService,
-    private configService: ConfigService,
   ) {}
 
   async register(user: CreateUserDto): Promise<User> {

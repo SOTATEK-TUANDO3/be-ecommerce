@@ -15,6 +15,7 @@ import { GetProductsDto } from './dto/filter-product.dto';
 import { Product } from './product.schema';
 import { CommentDto } from './dto/comment-product.dto';
 import { RatingDto } from './dto/rating-product.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('products')
 export class ProductsController {
@@ -31,6 +32,7 @@ export class ProductsController {
     await this.productsService.updateProduct(updateProductDto);
   }
 
+  @Public()
   @Get()
   async getProducts(
     @Query() filterDto: GetProductsDto,

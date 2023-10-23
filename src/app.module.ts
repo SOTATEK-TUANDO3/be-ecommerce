@@ -14,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from './mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AuthGuard } from './auth/auth.guard';
     InventoryModule,
     AuthModule,
     MailModule,
+    StripeModule,
   ],
   providers: [
     {
