@@ -116,8 +116,8 @@ export class ProductsService {
     return await this.productModel.findById(id);
   }
 
-  async comment(commentDto: CommentDto): Promise<void> {
-    const { id, email, comment } = commentDto;
+  async comment(commentDto: CommentDto, email: string): Promise<void> {
+    const { id, comment } = commentDto;
     const user = await this.usersService.getByEmail(email);
     const product = await this.productModel.findById(id);
     product.comments.push({
@@ -127,8 +127,8 @@ export class ProductsService {
     product.save();
   }
 
-  async rating(ratingDto: RatingDto): Promise<void> {
-    const { id, email, ratingNumber } = ratingDto;
+  async rating(ratingDto: RatingDto, email: string): Promise<void> {
+    const { id, ratingNumber } = ratingDto;
     const user = await this.usersService.getByEmail(email);
     const product = await this.productModel.findById(id);
     product.rating.push({

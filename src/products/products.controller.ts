@@ -7,6 +7,7 @@ import {
   Query,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { IGetResponseProducts, ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -51,12 +52,12 @@ export class ProductsController {
   }
 
   @Post('comment')
-  async comment(@Body() commentDto: CommentDto): Promise<void> {
-    await this.productsService.comment(commentDto);
+  async comment(@Body() commentDto: CommentDto, @Req() req): Promise<void> {
+    await this.productsService.comment(commentDto, req.user._doc.email);
   }
 
   @Post('rating')
-  async rating(@Body() ratingDto: RatingDto): Promise<void> {
-    await this.productsService.rating(ratingDto);
+  async rating(@Body() ratingDto: RatingDto, @Req() req): Promise<void> {
+    await this.productsService.rating(ratingDto, req.user._doc.email);
   }
 }

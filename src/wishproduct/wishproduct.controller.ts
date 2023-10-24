@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Delete, Req } from '@nestjs/common';
 import { WishproductService } from './wishproduct.service';
 import { WishProductDto } from './dto/wish-product.dto';
 
@@ -9,14 +9,22 @@ export class WishproductController {
   @Post()
   async createWishProduct(
     @Body() wishProductDto: WishProductDto,
+    @Req() req,
   ): Promise<void> {
-    this.wishProductService.createWishProduct(wishProductDto);
+    this.wishProductService.createWishProduct(
+      wishProductDto,
+      req.user._doc.email,
+    );
   }
 
   @Delete()
   async deleteWishProduct(
     @Body() wishProductDto: WishProductDto,
+    @Req() req,
   ): Promise<void> {
-    this.wishProductService.deleteWishProduct(wishProductDto);
+    this.wishProductService.deleteWishProduct(
+      wishProductDto,
+      req.user._doc.email,
+    );
   }
 }

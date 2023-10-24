@@ -6,10 +6,6 @@ export class RatingDto {
   id: string;
 
   @IsNotEmpty()
-  @IsString()
-  email: string;
-
-  @IsNotEmpty()
   @IsNumber()
   @Min(1)
   @Max(5)

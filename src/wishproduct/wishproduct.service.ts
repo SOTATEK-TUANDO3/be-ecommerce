@@ -13,8 +13,11 @@ export class WishproductService {
     private usersService: UsersService,
   ) {}
 
-  async createWishProduct(wishProductDto: WishProductDto): Promise<void> {
-    const { email, productId } = wishProductDto;
+  async createWishProduct(
+    wishProductDto: WishProductDto,
+    email: string,
+  ): Promise<void> {
+    const { productId } = wishProductDto;
     const user = await this.usersService.getByEmail(email);
     await this.wishProductModel.create({
       user,
@@ -22,8 +25,11 @@ export class WishproductService {
     });
   }
 
-  async deleteWishProduct(wishProductDto: WishProductDto): Promise<void> {
-    const { email, productId } = wishProductDto;
+  async deleteWishProduct(
+    wishProductDto: WishProductDto,
+    email: string,
+  ): Promise<void> {
+    const { productId } = wishProductDto;
     const user = await this.usersService.getByEmail(email);
     await this.wishProductModel.deleteOne({ user, product: productId });
   }
