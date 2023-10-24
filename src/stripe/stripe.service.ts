@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
+import { PaymentDto } from './dto/payment-dto';
 
 @Injectable()
 export class StripeService {
@@ -12,8 +13,14 @@ export class StripeService {
   }
 
   async checkout(
-    amount: number,
+    paymentDto: PaymentDto,
   ): Promise<Stripe.Response<Stripe.PaymentIntent>> {
+    const { products } = paymentDto;
+    const amount = products.reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.price * currentValue.quantity,
+      0,
+    );
     const res = await this.stripe.paymentIntents.create({
       amount,
       currency: process.env.STRIPE_CURRENCY,

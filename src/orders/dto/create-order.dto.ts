@@ -1,6 +1,6 @@
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
-class OrderdProduct {
+export class OrderdProduct {
   _id: string;
   name: string;
   description: string;
