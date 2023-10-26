@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Category } from 'src/category/category.schema';
 import { Order } from 'src/orders/order.schema';
 import { Product } from 'src/products/product.schema';
 
@@ -24,26 +23,28 @@ export class CustomerOrderProduct {
   product: Product;
 
   @Prop({
+    type: String,
     required: true,
   })
   name: string;
 
   @Prop({
+    type: String,
     required: true,
   })
   description: string;
 
   @Prop({
+    type: String,
     required: true,
   })
   image: string;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    type: String,
     required: true,
   })
-  category: Category;
+  category: string;
 
   @Prop({
     type: Number,

@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, Matches } from 'class-validator';
 
 export class GetProductsDto {
   @IsOptional()
@@ -7,17 +7,13 @@ export class GetProductsDto {
 
   @IsOptional()
   @IsString()
-  search?: string;
-
-  @IsOptional()
-  @IsString()
   category?: string;
 
   @IsOptional()
-  @IsString()
-  limit?: number;
+  @Matches(/^\d+$/)
+  limit?: string;
 
   @IsOptional()
-  @IsString()
-  skip?: number;
+  @Matches(/^\d+$/)
+  skip?: string;
 }

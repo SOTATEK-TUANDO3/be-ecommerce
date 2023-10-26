@@ -35,9 +35,11 @@ export class CreateProductDto {
   @IsNumber()
   quantity: number;
 
+  // @IsNotEmpty()
   @IsArray()
   ratting: IRatting[];
 
+  // @IsNotEmpty()
   @IsArray()
   comments: IComment[];
 }

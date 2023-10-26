@@ -8,6 +8,8 @@ import {
   Param,
   Delete,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { IGetResponseProducts, ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -17,6 +19,8 @@ import { Product } from './product.schema';
 import { CommentDto } from './dto/comment-product.dto';
 import { RatingDto } from './dto/rating-product.dto';
 import { Public } from 'src/decorators/public.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('products')
 export class ProductsController {
@@ -59,5 +63,23 @@ export class ProductsController {
   @Post('rating')
   async rating(@Body() ratingDto: RatingDto, @Req() req): Promise<void> {
     await this.productsService.rating(ratingDto, req.user._doc.email);
+  }
+
+  @Post('image/:productId')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploadedFiles/avatars',
+        filename: (req, file, cb) => {
+          cb(null, Date.now() + '_' + file.originalname);
+        },
+      }),
+    }),
+  )
+  async uploadImage(
+    @Param('productId') productId,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(file);
   }
 }

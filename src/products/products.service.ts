@@ -16,6 +16,7 @@ import { GetProductsDto } from './dto/filter-product.dto';
 import { UsersService } from 'src/users/users.service';
 import { CommentDto } from './dto/comment-product.dto';
 import { RatingDto } from './dto/rating-product.dto';
+import { LocalFileDto } from './dto/local-file.dto';
 
 export interface IGetResponseProducts {
   total_page: number;
@@ -84,30 +85,32 @@ export class ProductsService {
   }
 
   async getProducts(filterDto: GetProductsDto): Promise<IGetResponseProducts> {
-    const { category, name, search, limit = 10, skip = 0 } = filterDto;
+    const { category, name, limit = 10, skip = 0 } = filterDto;
     const mappedFilterDto: {
+      rating?: number;
+      category?: Category;
       name?: RegExp;
-      category?: RegExp;
-      search?: RegExp;
     } = {};
     if (category) {
-      mappedFilterDto.category = new RegExp(category, 'i');
+      const categoryInDb = await this.categoryService.getByName(category);
+      mappedFilterDto.category = categoryInDb;
     }
     if (name) {
       mappedFilterDto.name = new RegExp(name, 'i');
     }
-    if (search) {
-      mappedFilterDto.search = new RegExp(search, 'i');
-    }
     const count = await this.productModel.countDocuments({});
-    const total_page = Math.floor(count / limit) + 1;
+    const total_page = Math.floor(count / +limit) + 1;
     const products = await this.productModel
       .find(mappedFilterDto)
-      .limit(limit)
-      .skip(skip);
+      .populate('category')
+      .populate('quantity')
+      .populate({ path: 'rating', populate: { path: 'user' } })
+      .populate({ path: 'comments', populate: { path: 'user' } })
+      .limit(+limit)
+      .skip(+skip);
     return {
       total_page,
-      currentPage: skip,
+      currentPage: +skip,
       products,
     };
   }
@@ -136,5 +139,12 @@ export class ProductsService {
       ratingNumber,
     });
     product.save();
+  }
+
+  async uploadImg(productId: string, fileData: LocalFileDto): Promise<Product> {
+    const product = await this.productModel.findById(productId);
+    product.image = fileData.path;
+    const newProduct = await product.save();
+    return newProduct;
   }
 }
